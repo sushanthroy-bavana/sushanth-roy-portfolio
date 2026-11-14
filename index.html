@@ -499,6 +499,35 @@
     .dialog-message h2 { margin: 0 0 12px; font-size: clamp(27px, 4vw, 42px); font-weight: 600; letter-spacing: -.07em; }
     .dialog-message p { margin: 0; color: rgba(249,239,231,.7); font-size: 14px; line-height: 1.55; }
 
+    .intro-loader { position: fixed; inset: 0; z-index: 1000; display: grid; grid-template-rows: 1fr auto; padding: clamp(24px, 5vw, 72px); background: var(--ink); color: var(--paper); transition: clip-path .9s cubic-bezier(.76,0,.24,1), visibility .9s; clip-path: inset(0); }
+    .intro-loader.is-done { clip-path: inset(0 0 100%); visibility: hidden; pointer-events: none; }
+    .loader-top, .loader-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .loader-brand { font-size: clamp(14px, 1.3vw, 18px); font-weight: 600; letter-spacing: -.05em; }
+    .loader-count { font: 500 clamp(12px, 1.2vw, 16px)/1 "Geist Mono", monospace; font-variant-numeric: tabular-nums; }
+    .loader-title { align-self: end; margin: 0; max-width: 12ch; font-size: clamp(54px, 12vw, 180px); line-height: .86; font-weight: 600; letter-spacing: -.09em; }
+    .loader-bottom { padding-top: 22px; border-top: 1px solid rgba(249,239,231,.34); font: 500 10px/1.4 "Geist Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .loader-progress { width: min(30vw, 320px); height: 1px; background: rgba(249,239,231,.3); }
+    .loader-progress span { display: block; width: 0; height: 100%; background: var(--paper); }
+    .arrow { font-family: Arial, sans-serif; font-variant-emoji: text; }
+    @media (hover: none) { .nav-link-char, .cta-char { transition-duration: .01ms; } }
+    @media (max-width: 900px) {
+      .hero-top { grid-template-columns: minmax(0, .4fr) minmax(0, 1fr); }
+      .story-scroll { height: 250vh; }
+      .story-stage::before { animation-duration: 55s; }
+      .project-card { gap: 24px; }
+      .about-grid, .manifesto-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 620px) {
+      .intro-loader { padding: 24px 20px; }
+      .loader-title { font-size: clamp(56px, 17vw, 94px); }
+      .loader-progress { width: 30vw; }
+      .story-scroll { height: 190vh; }
+      .story-line { font-size: clamp(27px, 8vw, 42px); }
+      .site-header { grid-template-columns: auto 1fr auto; }
+      .header-cta { min-height: 36px; }
+      .footer-placeholder .arrow, .faq-cta-link .arrow { font-family: Arial, sans-serif; font-size: 1.1em; line-height: 1; vertical-align: baseline; }
+    }
+
     [data-reveal] { opacity: 1; transform: none; }
     .js-ready [data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
     .js-ready [data-reveal].is-visible { opacity: 1; transform: translateY(0); }
@@ -601,6 +630,11 @@
   </style>
 </head>
 <body>
+  <div class="intro-loader" id="intro-loader" role="status" aria-label="Loading portfolio">
+    <div class="loader-top"><span class="loader-brand">sushanth roy</span><span class="loader-count" id="loader-count">00</span></div>
+    <h1 class="loader-title">Frames<br>that stay.</h1>
+    <div class="loader-bottom"><span>Visual stories · Rajahmundry</span><span class="loader-progress" aria-hidden="true"><span id="loader-progress"></span></span><span>Portfolio</span></div>
+  </div>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header" id="top">
     <a class="wordmark" href="#top" aria-label="Sushanth Roy, back to top">sushanth roy</a>
@@ -611,7 +645,7 @@
     <a class="header-cta" href="#contact" aria-label="Get in touch">
       <span class="cta-bg-hover" aria-hidden="true"></span>
       <span class="cta-label"><span class="cta-label-copy cta-label-copy--out" data-cta-copy>Get in touch</span><span class="cta-label-copy cta-label-copy--in" data-cta-copy aria-hidden="true">Get in touch</span></span>
-      <span class="cta-icon" aria-hidden="true"><span>↗</span><span>↗</span></span>
+      <span class="cta-icon" aria-hidden="true"><span>↗︎</span><span>↗︎</span></span>
     </a>
   </header>
 
@@ -678,7 +712,7 @@
             </div>
             <video class="project-hover-video" muted loop playsinline preload="none" aria-hidden="true"></video>
             <span class="frame-label">Photo · Creative Portrait</span>
-            <span class="frame-caption"><span>Creative portraits across stations, woods, and shorelines</span><span class="play-mark" aria-hidden="true">↗</span></span>
+            <span class="frame-caption"><span>Creative portraits across stations, woods, and shorelines</span><span class="play-mark" aria-hidden="true">↗︎</span></span>
           </button>
           <div class="project-info"><div><span class="project-count">02</span><h3 class="project-name">Creative Portrait</h3><p class="project-type">A creative fashion portrait composed with warm light in a railway station.</p></div><span class="project-year">Photo</span></div>
         </article>
@@ -694,7 +728,7 @@
             </div>
             <video class="project-hover-video" muted loop playsinline preload="none" aria-hidden="true"></video>
             <span class="frame-label">College event · still</span>
-            <span class="frame-caption"><span>MQUBE Band and friends at the college cultural fest</span><span class="play-mark" aria-hidden="true">↗</span></span>
+            <span class="frame-caption"><span>MQUBE Band and friends at the college cultural fest</span><span class="play-mark" aria-hidden="true">↗︎</span></span>
           </button>
           <div class="project-info"><div><span class="project-count">03</span><h3 class="project-name">College Cultural Fest</h3><p class="project-type">Performance of MQUBE Band in NIT Puducherry College Cultural Fest framed in expressive stage light and capturing the energy of a live moment</p></div><span class="project-year">Photo</span></div>
         </article>
@@ -708,7 +742,7 @@
             </div>
             <video class="project-hover-video" muted loop playsinline preload="none" aria-hidden="true"></video>
             <span class="frame-label">Photo · Candid Portrait</span>
-            <span class="frame-caption"><span>A candid moment under vibrant stage light</span><span class="play-mark" aria-hidden="true">↗</span></span>
+            <span class="frame-caption"><span>A candid moment under vibrant stage light</span><span class="play-mark" aria-hidden="true">↗︎</span></span>
           </button>
           <div class="project-info"><div><span class="project-count">04</span><h3 class="project-name">Candid Portrait</h3><p class="project-type">A relaxed event portrait of Rio Raj at NIT Puducherry college cultural fest</p></div><span class="project-year">Photo</span></div>
         </article>
@@ -814,7 +848,7 @@
       <div class="faq-cta" data-reveal>
         <h3>Have more questions?</h3>
         <p>Feel free to ask.</p>
-        <a class="faq-cta-link" href="#footer-contact">Get in touch <span class="arrow" aria-hidden="true">↗</span></a>
+        <a class="faq-cta-link" href="#footer-contact">Get in touch <span class="arrow" aria-hidden="true">↗︎</span></a>
       </div>
     </section>
 
@@ -831,14 +865,14 @@
         <div class="footer-column" data-reveal style="--footer-reveal-delay:80ms">
           <span class="footer-label">Social</span>
           <div class="footer-column-links">
-            <a class="footer-placeholder" href="https://www.instagram.com/sushanthh_roy/" target="_blank" rel="noopener noreferrer" aria-label="Instagram, opens in a new tab">Instagram <span class="arrow" aria-hidden="true">↗</span></a>
-            <a class="footer-placeholder" href="https://www.linkedin.com/in/sushanthroy" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn, opens in a new tab">LinkedIn <span class="arrow" aria-hidden="true">↗</span></a>
-            <a class="footer-placeholder" href="https://www.facebook.com/sushanth.roy.18/" target="_blank" rel="noopener noreferrer" aria-label="Facebook, opens in a new tab">Facebook <span class="arrow" aria-hidden="true">↗</span></a>
+            <a class="footer-placeholder" href="https://www.instagram.com/sushanthh_roy/" target="_blank" rel="noopener noreferrer" aria-label="Instagram, opens in a new tab">Instagram <span class="arrow" aria-hidden="true">↗︎</span></a>
+            <a class="footer-placeholder" href="https://www.linkedin.com/in/sushanthroy" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn, opens in a new tab">LinkedIn <span class="arrow" aria-hidden="true">↗︎</span></a>
+            <a class="footer-placeholder" href="https://www.facebook.com/sushanth.roy.18/" target="_blank" rel="noopener noreferrer" aria-label="Facebook, opens in a new tab">Facebook <span class="arrow" aria-hidden="true">↗︎</span></a>
           </div>
         </div>
         <div class="footer-column" id="footer-contact" data-reveal style="--footer-reveal-delay:160ms">
           <span class="footer-label">Contact</span>
-          <a class="footer-placeholder" href="mailto:sushanthroy.bavana@gmail.com" aria-label="Email Sushanth Roy">Email <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="footer-placeholder" href="mailto:sushanthroy.bavana@gmail.com" aria-label="Email Sushanth Roy">Email <span class="arrow" aria-hidden="true">↗︎</span></a>
         </div>
       </div>
       <div class="footer-meta" data-reveal><span>© <span id="year">2026</span> SUSHANTH ROY</span><span>PRIVACY</span><span>RAJAHMUNDRY, ANDHRA PRADESH</span></div>
@@ -860,6 +894,18 @@
   <script>
     (() => {
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const loader = document.getElementById('intro-loader');
+      const loaderCount = document.getElementById('loader-count');
+      const loaderBar = document.getElementById('loader-progress');
+      const loaderStart = performance.now();
+      const animateLoader = now => {
+        const progress = Math.min(100, Math.round((now - loaderStart) / (reduceMotion ? 1 : 18)));
+        loaderCount.textContent = String(progress).padStart(2, '0');
+        loaderBar.style.width = `${progress}%`;
+        if (progress < 100) requestAnimationFrame(animateLoader);
+        else window.setTimeout(() => loader.classList.add('is-done'), reduceMotion ? 0 : 180);
+      };
+      requestAnimationFrame(animateLoader);
       document.documentElement.classList.add('js-ready');
       document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -881,8 +927,8 @@
       splitHoverCopy('[data-hover-copy]', 'nav-link-char');
       splitHoverCopy('[data-cta-copy]', 'cta-char');
 
-      if (typeof Lenis !== 'undefined' && !reduceMotion) {
-        const lenis = new Lenis({ anchors: true });
+      if (typeof Lenis !== 'undefined' && !reduceMotion && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        const lenis = new Lenis({ anchors: true, lerp: 0.1, smoothWheel: true, wheelMultiplier: 0.9 });
         window.lenis = lenis;
         const raf = time => { lenis.raf(time); window.requestAnimationFrame(raf); };
         window.requestAnimationFrame(raf);
@@ -1239,3 +1285,4 @@
   </script>
 </body>
 </html>
+
