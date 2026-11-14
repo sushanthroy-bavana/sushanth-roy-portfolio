@@ -403,11 +403,11 @@
     .manifesto-copy p { margin: 0 0 16px; color: #4e4945; font-size: clamp(16px, 1.35vw, 19px); line-height: 1.5; letter-spacing: -.025em; }
     .manifesto-copy p:last-child { margin-bottom: 0; }
 
-    .practice { position: relative; isolation: isolate; padding-top: clamp(85px, 10vw, 150px); background: var(--night); color: var(--paper); }
+    .practice { position: relative; min-height: 300svh; isolation: isolate; padding-top: clamp(85px, 10vw, 150px); background: var(--night); color: var(--paper); }
     .practice::before, .about-section::before, .faq-section::before { content: ""; position: absolute; z-index: -1; inset: 0; pointer-events: none; opacity: .5; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='dust'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='table' tableValues='0 .95'/%3E%3CfeFuncG type='table' tableValues='0 .95'/%3E%3CfeFuncB type='table' tableValues='0 .95'/%3E%3CfeFuncA type='table' tableValues='0 .28'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23dust)'/%3E%3C/svg%3E"); background-size: 180px 180px; background-position: 0 0; background-repeat: repeat; mix-blend-mode: screen; transform: translate3d(var(--dust-shift-x, 0px), var(--dust-shift-y, 0px), 0); transition: transform .65s var(--ease); animation: dust-drift 38s ease-in-out infinite alternate; }
-    .practice-head { margin-bottom: 36px; padding-bottom: 27px; border-bottom: 1px solid var(--line-light); }
+    .practice-head { position: sticky; top: 86px; z-index: 4; margin-bottom: 36px; padding-bottom: 27px; border-bottom: 1px solid var(--line-light); background: var(--night); }
     .service-heading { margin: 0; color: var(--paper); font-size: 14px; font-weight: 600; line-height: 1.2; letter-spacing: -.025em; }
-    .practice-layout { display: grid; grid-template-columns: minmax(250px, .38fr) minmax(0, 1fr); align-items: start; gap: clamp(40px, 8vw, 100px); }
+    .practice-layout { position: sticky; top: 180px; display: grid; grid-template-columns: minmax(250px, .38fr) minmax(0, 1fr); align-items: start; gap: clamp(40px, 8vw, 100px); }
     .services-preview { position: relative; min-width: 0; aspect-ratio: 1.28; overflow: hidden; background: #4b4844; isolation: isolate; }
     .service-visual { position: absolute; inset: 0; overflow: hidden; opacity: 0; transform: scale(1.035); transition: opacity .55s ease, transform 1s var(--ease); }
     .service-visual.is-active { opacity: 1; transform: scale(1); }
@@ -543,6 +543,8 @@
       .project-card { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 28px; }
       .manifesto-grid, .about-grid { gap: 7vw; }
       .practice-layout { gap: 34px; }
+      .practice-head { top: 78px; }
+      .practice-layout { top: 160px; }
       .service-row { font-size: clamp(32px, 4.5vw, 48px); }
     }
     @media (max-width: 991px) {
@@ -583,6 +585,8 @@
       .project-info { padding-top: 17px; }
       .practice-head { margin-bottom: 24px; padding-bottom: 18px; }
       .practice-layout { grid-template-columns: 1fr; gap: 24px; }
+      .practice-head { top: 66px; margin-bottom: 18px; padding-bottom: 14px; }
+      .practice-layout { top: 128px; }
       .services-list { order: 1; }
       .services-preview { order: 2; aspect-ratio: 1.18; }
       .service-row { padding: 0 0 5px; font-size: clamp(28px, 8vw, 42px); line-height: 1.18; }
@@ -1130,6 +1134,7 @@
 
       const serviceRows = [...document.querySelectorAll('.service-row')];
       const serviceVisuals = [...document.querySelectorAll('.service-visual')];
+      const practiceSection = document.querySelector('.practice');
       const activateService = row => {
         const selectedService = row.dataset.service;
         serviceRows.forEach(item => {
@@ -1144,6 +1149,24 @@
         row.addEventListener('focus', () => activateService(row));
         row.addEventListener('click', () => activateService(row));
       });
+      let serviceScrollTicking = false;
+      const updateServiceOnScroll = () => {
+        const rect = practiceSection.getBoundingClientRect();
+        const travel = Math.max(1, practiceSection.offsetHeight - window.innerHeight);
+        const progress = clamp(-rect.top / travel);
+        const index = Math.min(serviceRows.length - 1, Math.floor(progress * serviceRows.length));
+        activateService(serviceRows[index]);
+        serviceScrollTicking = false;
+      };
+      const requestServiceUpdate = () => {
+        if (!serviceScrollTicking) {
+          window.requestAnimationFrame(updateServiceOnScroll);
+          serviceScrollTicking = true;
+        }
+      };
+      window.addEventListener('scroll', requestServiceUpdate, { passive: true });
+      window.addEventListener('resize', requestServiceUpdate);
+      updateServiceOnScroll();
 
       const dialog = document.querySelector('.video-dialog');
       const video = dialog.querySelector('video');
@@ -1167,6 +1190,14 @@
         const hoverPreview = button.querySelector('.project-hover-video');
         const gallery = button.querySelector('.project-gallery');
         const galleryImages = gallery ? [...gallery.querySelectorAll('.project-gallery-image')] : [];
+        const cover = button.querySelector('.project-cover');
+        if (cover && gallery) {
+          const coverSlide = cover.cloneNode();
+          coverSlide.className = 'project-gallery-image';
+          if (cover.classList.contains('project-cover--contain')) coverSlide.classList.add('project-cover--contain');
+          gallery.prepend(coverSlide);
+          galleryImages.unshift(coverSlide);
+        }
         let galleryTimer = 0;
         let galleryIndex = 0;
         let galleryInView = false;
@@ -1188,7 +1219,7 @@
             galleryImages[galleryIndex].classList.remove('is-active');
             galleryIndex = (galleryIndex + 1) % galleryImages.length;
             galleryImages[galleryIndex].classList.add('is-active');
-          }, 2000);
+          }, 3000);
           return true;
         };
         const stopHoverPreview = () => {
